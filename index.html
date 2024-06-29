@@ -33,14 +33,65 @@
 		<div>Uppsala University</div>
 </section>
 
-<section data-background-image="images/background.jpg" data-background-opacity="0.2">
+<section>
+	<h3>Overview</h3>
+	<ul>
+		<li>Interaction nets</li>
+		<li>OCaml</li>
+		<li>Encoding</li>
+		<li>Benchmarks</li>
+		<li>Conclusion & future work</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Interaction nets</h3>
+	<ul>
+		<li>Visual programming language</li>
+		<li>Invented by Yves Lafont [1]</li>
+		<li>Used for optimal [2] and efficient [3] implementations of $\lambda$-calculus
+	</ul>
+	<div class="citation">
+		<div class="cite">[1] Interaction Nets</div>
+		<div class="source">Yves Lafont<br>
+		ACM SIGPLAN-SIGACT Symposium on Principles of Programming lLanguages (POPL 1990)</div>
+	</div>
+	<div class="citation">
+		<div class="cite">[2] The geometry of optimal lambda reduction</div>
+		<div class="source">Georges Gonthier, Martín Abadi & Jean-Jacques Lévy<br>
+		ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages (POPL 1992)</div>
+	</div>
+	<div class="citation">
+		<div class="cite">[3] YALE: yet another lambda evaluator based on interaction nets</div>
+		<div class="source">Ian Mackie<br>
+			ACM SIGPLAN International Conference on Functional Programming (ICFP 1998)</div>
+	</div>
+</section>
+
+<section>
+	<h3>Properties of Interaction nets</h3>
+
+	<ul>
+		<li>Locality of reduction</li>
+		<ul style="list-style:none">
+			<li><emph>$\Rightarrow$ parallelism</emph></li>
+		</ul>
+		<li>Strong confluence</li>
+		<ul style="list-style:none">
+			<li><emph>$\Rightarrow$ determinism</emph></li>
+		</ul>
+		<li>Turing complete</li>
+	</ul>
+</section>
+
+<section>
 	<h3>Agents</h3>
 	<img width="60%" src="images/agent_examples.drawio.png" />
 	<p class="fragment">$\alpha, \beta, \gamma \in \Sigma$ &nbsp; (label set)</p>
 	<p class="fragment">$ar : \Sigma \rightarrow \mathbb{N}$ &nbsp; (arity function)</p>
 </section>
 
-<section data-background-image="images/background.jpg" data-background-opacity="0.2">
+<section>
 	<h3>Rules</h3>
 	<img width="90%" src="images/inet_rule.drawio.png" />
 	<p class="fragment">$(\alpha \times \beta \rightarrow N) \in \mathscr{R}$ &nbsp; (rule set)</p>
@@ -66,7 +117,35 @@
 </section>
 
 <section>
-	<h3>Concurrency API</h3>
+	<h3>OCaml</h3>
+
+	<ul>
+		<li>Industrial strength, (mostly) functional language</li>
+		<li>Member of the ML family</li>
+		<li>Strong background in formal methods</li>
+		<ul>
+			<li>Coq / Rocq</li>
+			<li>Frama-C</li>
+		</ul>
+		<li>Recently got native support for parallelism</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Multicore OCaml</h3>
+	<ul>
+		<li>Basic unit of parallelism: <emph>domain</emph></li>
+		<li>Map directly to OS threads</li>
+		<li>Costly to create and tear down</li>
+		<li>Stdlib only offers low-level interface</li>
+		<li>Many libraries have been developed on-top:</li>
+		<ul>
+			<li>domainslib, kcas, picos, moonpool, ...</li>
+	</ul>
+</section>
+
+<section>
+	<h3>Common API for this paper</h3>
 	<pre class="OCaml"><code data-trim data-noescape data-line-numbers="|1|2,3|4|5|6|7|8|9|">
 		type pool
 		type 'a promise
@@ -81,31 +160,233 @@
 </section>
 
 <section data-auto-animate>
+	<h3>Example</h3>
+	<img width="60%" src="images/bool_agents.drawio.png" />
+</section>
+
+<section data-auto-animate>
 	<h3>First encoding</h3>
 	<div class="container">
 		<div class="col">
-			<img src="images/typed_agent_example.drawio.png" />
+			<img src="images/bool_agents.drawio.png" />
 		</div>
 		<div class="col">
-			<pre class="OCaml"><code data-trim data-noescape data-line-numbers="|1-4|6-9|8|">
-				type id = 
-					| Alpha 
-					| Beta 
-					| Gamma 
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|1-4|6-9|8|">
+				type id =
+					| T
+					| F
+					| And
 
 				type agent = {
-					id : id; 
-					aux_ports : agent list ref; 
+					id : id;
+					ports : agent Array.t;
 				}
 			</code></pre>
 		</div>
 	</div>
-	<p class="fragment">Arity constraint not enforced</p>
+	<!-- <p class="fragment">Arity constraint not enforced</p> -->
 	<div class="fragment citation">
 		<div class="cite">Compilation of Interaction Nets</div>
 		<div class="source">Abubakar Hassan, Ian Mackie, Shinya Sato <br>
 		Electronic Notes in Theoretical Computer Science 253 (2009)</div>
 	</div>
+	<div class="fragment citation">
+		<div class="cite">A Simple Parallel Implementation of Interaction Nets in Haskell</div>
+		<div class="source">Wolfram Kahl <br>
+		Electronic Proceedings in Theoretical Computer Science 179 (2015)</div>
+	</div>
+</section>
+
+<section data-auto-animate>
+	<h3>Second encoding</h3>
+	<div class="container">
+		<div class="col">
+			<img src="images/bool_agents.drawio.png" />
+		</div>
+		<div class="col">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|1-4|6-9|8|">
+				type agent =
+					| T
+					| F
+					| And of agent * agent
+			</code></pre>
+		</div>
+	</div>
+	<ul>
+		<li>Arity is enforced by type-system</li>
+		<li>A value of type <emph>agent</emph> represents the principle port</li>
+		<li>Nets are constructed by recursive application of constructors</li>
+	</ul>
+</section>
+
+<section data-auto-animate>
+	<h3>Auxiliary connections</h3>
+	<img width="40%" src="images/example_aux_connect.drawio.png" />
+</section>
+
+<section data-auto-animate>
+	<h3>Auxiliary connections</h3>
+	<div class="container">
+		<div class="col">
+			<img width="60%" src="images/example_aux_connect.drawio.png" />
+		</div>
+		<div class="col">
+			<img src="images/example_conn_names.drawio.png" />
+		</div>
+	</div>
+</section>
+
+<section data-auto-animate>
+	<h3>Auxiliary connections</h3>
+	<div class="container">
+		<div class="col">
+			<img src="images/example_conn_names.drawio.png" />
+		</div>
+		<div class="col">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers>
+				type agent =
+					| T
+					| F
+					| And of agent * agent
+					| NamePos of agent promise
+					| NameNeg of agent resolver
+			</code></pre>
+		</div>
+	</div>
+	<pre class="OCaml"><code data-trim data-noescape data-line-numbers>
+		let new_name () =
+			let promise, resolver = make_future () in
+			NamePos promise, NameNeg resolver
+	</code></pre>
+</section>
+
+<section data-auto-animate>
+	<h3>Encoding rule application</h3>
+	<img width="60%" src="images/rule_true_and.drawio.png" />
+</section>
+
+<section data-auto-animate>
+	<h3>Encoding rule application</h3>
+	<div class="container">
+		<div class="col" style="flex: 0.5">
+			<img width="90%" src="images/rule_true_and.drawio.png" />
+		</div>
+		<div class="col">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|3,4|6|8-10|">
+				let rec apply_rule a1 a2 =
+					match a1, a2 with
+					| T, And (r, b)
+					| And (r, b), T  -> b -><- r
+				
+					| _, _  -> failwith "No rule"
+
+				and ( -><- ) a1 a2 =
+					run_async pool
+						(fun _ -> apply_rule a1 a2)
+			</code></pre>
+		</div>
+	</div>
+</section>
+
+<section data-auto-animate>
+	<h3>Encoding rule application</h3>
+	<img width="60%" src="images/rule_false_and.drawio.png" />
+</section>
+
+<section data-auto-animate>
+	<h3>Encoding rule application</h3>
+	<div class="container">
+		<div class="col" style="flex: 0.8">
+			<img width="90%" src="images/rule_false_and.drawio.png" />
+		</div>
+		<div class="col">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|4,5|">
+				let rec apply_rule a1 a2 =
+					match a1, a2 with
+					...
+					| F, And (r, _)
+					| And (r, _), F -> F -><- r
+					...
+			</code></pre>
+		</div>
+	</div>
+</section>
+
+<section data-auto-animate>
+	<h3>Encoding rule application</h3>
+	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="">
+		let rec apply_rule a1 a2 = match a1, a2 with 
+			| T, And (r, b)
+			| And (r, b), T  -> b -><- r
+
+			| F, And (r, b)
+			| And (r, _), F  -> F -><- r
+
+			| NamePos v, a
+			| a, NamePos v   -> await v -><- a
+
+			| NameNeg v, a
+			| a, NameNeg v   -> resolve v a
+
+			| _, _           -> failwith "No rule"
+	</code></pre>
+</section>
+
+<section data-auto-animate>
+	<h3>Agent attributes</h3>
+	<img width="80%" src="images/bool_int_agents.drawio.png" />
+</section>
+
+<section data-auto-animate>
+	<h3>Agent attributes</h3>
+	<img width="70%" src="images/bool_int_agents.drawio.png" />
+	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="">
+		type agent =
+			| Int of int
+			| IsEven of agent
+			| T
+			| F
+			| And of agent * agent
+			| NamePos of agent promise
+			| NameNeg of agent resolver
+	</code></pre>
+</section>
+
+<section data-auto-animate>
+	<h3>Agent attributes</h3>
+	<img width="70%" src="images/rule_int_iseven.drawio.png" />
+</section>
+
+<section data-auto-animate>
+	<h3>Agent attributes</h3>
+	<div class="container">
+		<div class="col" style="flex: 0.6">
+			<img src="images/rule_int_iseven.drawio.png" />
+		</div>
+		<div class="col">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|4,5|">
+				let rec apply_rule a1 a2 =
+					match a1, a2 with
+					...
+					| IsEven r, Int n
+					| Int n, IsEven r when n mod 2 = 0
+						-> T -><- r
+
+					| IsEven r, Int _
+					| Int _, IsEven r
+						-> F -><- r
+					...
+			</code></pre>
+		</div>
+	</div>
+</section>
+
+<section>
+	<h3>Problems</h3>
+	<ul>
+		<li>Symmetry $\Rightarrow$ verbosity</li>
+		<li>Catch-all case</li>
+	</ul>
 </section>
 
 <section>
