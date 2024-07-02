@@ -36,6 +36,7 @@
 <section>
 	<h3>Overview</h3>
 	<ul>
+		<li>Motivation</li>
 		<li>Interaction nets</li>
 		<li>OCaml</li>
 		<li>Encoding</li>
@@ -45,23 +46,65 @@
 </section>
 
 <section>
+	<h3>My journey to graph rewriting</h3>
+	<ul>
+		<li class="fragment fade-up">My research is not connected to graph rewriting</li>
+		<li class="fragment fade-up">Found interaction nets by lucky coincidence</li>
+		<li class="fragment fade-up">Started playing around with hand-encoded nets</li>
+		<ul>
+			<li class="fragment fade-up">No prior work on embedding into OCaml</li>
+			<li class="fragment fade-up">Started copying encodings from other papers</li>
+			<li class="fragment fade-up">Ran into many problems </li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Problems</h3>
+	<ul>
+		<li class="fragment fade-up">Most existing encodings focus on efficiency</li>
+		<ul>
+			<li class="fragment fade-up">Good for compilation</li>
+			<li class="fragment fade-up">Less intuitive/useful for manual experiments</li>
+		</ul>
+		<li class="fragment fade-up">Original paper already presented a type system</li>
+		<ul>
+			<li class="fragment fade-up">Catches many errors when constructing nets</li>
+			<li class="fragment fade-up">Manual encoding does not have a type-checking phase</li>
+		</ul>
+	</ul>
+</section>
+
+<section>
+	<h3>Motivation / Research question</h3>
+	<ul>
+		<li class="fragment fade-up">Can we express the original type system in OCaml?</li>
+		<ul>
+			<li class="fragment fade-up">Do we need runtime checks?</li>
+			<li class="fragment fade-up">Can we do it statically/at compile time?</li>
+		</ul>
+		<li class="fragment fade-up">Can we make use of OCaml's support for parallelism?</li>
+	</ul>
+</section>
+
+<section>
 	<h3>Interaction nets</h3>
 	<ul>
-		<li>Visual programming language</li>
-		<li>Invented by Yves Lafont [1]</li>
-		<li>Used for optimal [2] and efficient [3] implementations of $\lambda$-calculus
+		<li class="fragment fade-up" data-fragment-index="1">Visual programming language</li>
+		<li class="fragment fade-up" data-fragment-index="2">Invented by Yves Lafont [1]</li>
+		<li class="fragment fade-up" data-fragment-index="3">Used for optimal [2] and efficient [3] implementations of $\lambda$-calculus
 	</ul>
-	<div class="citation">
+	<div class="citation fragment fade-up" data-fragment-index="2">
 		<div class="cite">[1] Interaction Nets</div>
 		<div class="source">Yves Lafont<br>
 		ACM SIGPLAN-SIGACT Symposium on Principles of Programming lLanguages (POPL 1990)</div>
 	</div>
-	<div class="citation">
+	<div class="citation fragment fade-up" data-fragment-index="3">
 		<div class="cite">[2] The geometry of optimal lambda reduction</div>
 		<div class="source">Georges Gonthier, Martín Abadi & Jean-Jacques Lévy<br>
 		ACM SIGPLAN-SIGACT Symposium on Principles of Programming Languages (POPL 1992)</div>
 	</div>
-	<div class="citation">
+	<div class="citation fragment fade-up" data-fragment-index="3">
 		<div class="cite">[3] YALE: yet another lambda evaluator based on interaction nets</div>
 		<div class="source">Ian Mackie<br>
 			ACM SIGPLAN International Conference on Functional Programming (ICFP 1998)</div>
@@ -72,15 +115,15 @@
 	<h3>Properties of Interaction nets</h3>
 
 	<ul>
-		<li>Locality of reduction</li>
+		<li class="fragment fade-up">Locality of reduction</li>
 		<ul style="list-style:none">
-			<li><emph>$\Rightarrow$ parallelism</emph></li>
+			<li class="fragment fade-up"><emph>$\Rightarrow$ parallelism</emph></li>
 		</ul>
-		<li>Strong confluence</li>
+		<li class="fragment fade-up">Strong confluence</li>
 		<ul style="list-style:none">
-			<li><emph>$\Rightarrow$ determinism</emph></li>
+			<li class="fragment fade-up"><emph>$\Rightarrow$ determinism</emph></li>
 		</ul>
-		<li>Turing complete</li>
+		<li class="fragment fade-up">Turing complete</li>
 	</ul>
 </section>
 
@@ -120,27 +163,27 @@
 	<h3>OCaml</h3>
 
 	<ul>
-		<li>Industrial strength, (mostly) functional language</li>
-		<li>Member of the ML family</li>
-		<li>Strong background in formal methods</li>
+		<li class="fragment fade-up">Industrial strength, (mostly) functional language</li>
+		<li class="fragment fade-up">Member of the ML family</li>
+		<li class="fragment fade-up">Strong background in formal methods</li>
 		<ul>
-			<li>Coq / Rocq</li>
-			<li>Frama-C</li>
+			<li class="fragment fade-up">Coq / Rocq</li>
+			<li class="fragment fade-up">Frama-C</li>
 		</ul>
-		<li>Recently got native support for parallelism</li>
+		<li class="fragment fade-up">Recently got native support for parallelism</li>
 	</ul>
 </section>
 
 <section>
 	<h3>Multicore OCaml</h3>
 	<ul>
-		<li>Basic unit of parallelism: <emph>domain</emph></li>
-		<li>Map directly to OS threads</li>
-		<li>Costly to create and tear down</li>
-		<li>Stdlib only offers low-level interface</li>
-		<li>Many libraries have been developed on-top:</li>
+		<li class="fragment fade-up">Basic unit of parallelism: <emph>domain</emph></li>
+		<li class="fragment fade-up">Map directly to OS threads</li>
+		<li class="fragment fade-up">Costly to create and tear down</li>
+		<li class="fragment fade-up">Stdlib only offers low-level interface</li>
+		<li class="fragment fade-up">Many libraries have been developed on-top:</li>
 		<ul>
-			<li>domainslib, kcas, picos, moonpool, ...</li>
+			<li class="fragment fade-up">domainslib, kcas, picos, moonpool, ...</li>
 	</ul>
 </section>
 
@@ -204,7 +247,7 @@
 			<img src="images/bool_agents.drawio.png" />
 		</div>
 		<div class="col">
-			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|1-4|6-9|8|">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="">
 				type agent =
 					| T
 					| F
