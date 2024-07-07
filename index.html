@@ -33,7 +33,7 @@
 		<div>Uppsala University</div>
 </section>
 
-<section>
+<!-- <section>
 	<h3>Overview</h3>
 	<ul>
 		<li>Motivation</li>
@@ -43,46 +43,14 @@
 		<li>Benchmarks</li>
 		<li>Conclusion & future work</li>
 	</ul>
-</section>
+</section> -->
 
 <section>
-	<h3>My journey to graph rewriting</h3>
-	<ul>
-		<li class="fragment fade-up">My research is not connected to graph rewriting</li>
-		<li class="fragment fade-up">Found interaction nets by lucky coincidence</li>
-		<li class="fragment fade-up">Started playing around with hand-encoded nets</li>
-		<ul>
-			<li class="fragment fade-up">No prior work on embedding into OCaml</li>
-			<li class="fragment fade-up">Started copying encodings from other papers</li>
-			<li class="fragment fade-up">Ran into many problems </li>
-		</ul>
-	</ul>
-</section>
-
-<section>
-	<h3>Problems</h3>
+	<h3>Motivation</h3>
 	<ul>
 		<li class="fragment fade-up">Most existing encodings focus on efficiency</li>
-		<ul>
-			<li class="fragment fade-up">Good for compilation</li>
-			<li class="fragment fade-up">Less intuitive/useful for manual experiments</li>
-		</ul>
 		<li class="fragment fade-up">Original paper already presented a type system</li>
-		<ul>
-			<li class="fragment fade-up">Catches many errors when constructing nets</li>
-			<li class="fragment fade-up">Manual encoding does not have a type-checking phase</li>
-		</ul>
-	</ul>
-</section>
-
-<section>
-	<h3>Motivation / Research question</h3>
-	<ul>
 		<li class="fragment fade-up">Can we express the original type system in OCaml?</li>
-		<ul>
-			<li class="fragment fade-up">Do we need runtime checks?</li>
-			<li class="fragment fade-up">Can we do it statically/at compile time?</li>
-		</ul>
 		<li class="fragment fade-up">Can we make use of OCaml's support for parallelism?</li>
 	</ul>
 </section>
@@ -158,7 +126,7 @@
 		<li class="fragment">polarity ($+$, $-$)</li>
 	</ul>
 </section>
-
+<!-- 
 <section>
 	<h3>OCaml</h3>
 
@@ -200,7 +168,7 @@
 		val create_pool : int -> pool
 		val run_async : pool -> (unit -> unit) -> unit
 	</code></pre>
-</section>
+</section> -->
 
 <section data-auto-animate>
 	<h3>Example</h3>
@@ -376,12 +344,12 @@
 </section>
 
 <section data-auto-animate>
-	<h3>Agent attributes</h3>
+	<h3>New agents</h3>
 	<img width="80%" src="images/bool_int_agents.drawio.png" />
 </section>
 
 <section data-auto-animate>
-	<h3>Agent attributes</h3>
+	<h3>New agents</h3>
 	<img width="70%" src="images/bool_int_agents.drawio.png" />
 	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="">
 		type agent =
@@ -396,12 +364,12 @@
 </section>
 
 <section data-auto-animate>
-	<h3>Agent attributes</h3>
+	<h3>Rewriting with attributes</h3>
 	<img width="70%" src="images/rule_int_iseven.drawio.png" />
 </section>
 
 <section data-auto-animate>
-	<h3>Agent attributes</h3>
+	<h3>Rewriting with attributes</h3>
 	<div class="container">
 		<div class="col" style="flex: 0.6">
 			<img src="images/rule_int_iseven.drawio.png" />
