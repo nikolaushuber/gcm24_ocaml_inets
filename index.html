@@ -48,9 +48,11 @@
 <section>
 	<h3>Motivation</h3>
 	<ul>
+		<li class="fragment fade-up">No previous encoding in OCaml</li>
+		<li class="fragment fade-up">Primary interest: manual encoding</li>
 		<li class="fragment fade-up">Most existing encodings focus on efficiency</li>
-		<li class="fragment fade-up">Original paper already presented a type system</li>
-		<li class="fragment fade-up">Can we express the original type system in OCaml?</li>
+		<li class="fragment fade-up">Original paper presented a type system</li>
+		<li class="fragment fade-up">Can we express this type system in OCaml?</li>
 		<li class="fragment fade-up">Can we make use of OCaml's support for parallelism?</li>
 	</ul>
 </section>
@@ -108,6 +110,7 @@
 	<p class="fragment">$(\alpha \times \beta \rightarrow N) \in \mathscr{R}$ &nbsp; (rule set)</p>
 </section>
 
+<!--
 <section>
 	<h3>Rule application</h3>
 	<ul>
@@ -117,6 +120,7 @@
 	</ul>
 	<p class="fragment">$\Rightarrow$ rewriting is <emph>strongly confluent</emph></p>
 </section>
+-->
 
 <section data-auto-animate>
 	<h3>Typed agents</h3>
@@ -283,7 +287,30 @@
 			<img width="90%" src="images/rule_true_and.drawio.png" />
 		</div>
 		<div class="col">
-			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|3,4|6|8-10|">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|3,4">
+				let rec apply_rule a1 a2 =
+					match a1, a2 with
+					| T, And (r, b)  -> b -><- r
+					| And (r, b), T  -> b -><- r
+				
+					| _, _  -> failwith "No rule"
+
+				and ( -><- ) a1 a2 =
+					run_async pool
+						(fun _ -> apply_rule a1 a2)
+			</code></pre>
+		</div>
+	</div>
+</section>
+
+<section data-auto-animate>
+	<h3>Encoding rule application</h3>
+	<div class="container">
+		<div class="col" style="flex: 0.5">
+			<img width="90%" src="images/rule_true_and.drawio.png" />
+		</div>
+		<div class="col">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|6|8-10|">
 				let rec apply_rule a1 a2 =
 					match a1, a2 with
 					| T, And (r, b)
@@ -299,6 +326,7 @@
 	</div>
 </section>
 
+<!--
 <section data-auto-animate>
 	<h3>Encoding rule application</h3>
 	<img width="60%" src="images/rule_false_and.drawio.png" />
@@ -322,6 +350,7 @@
 		</div>
 	</div>
 </section>
+-->
 
 <section data-auto-animate>
 	<h3>Encoding rule application</h3>
@@ -330,7 +359,7 @@
 			| T, And (r, b)
 			| And (r, b), T  -> b -><- r
 
-			| F, And (r, b)
+			| F, And (r, _)
 			| And (r, _), F  -> F -><- r
 
 			| NamePos v, a
@@ -351,7 +380,7 @@
 <section data-auto-animate>
 	<h3>New agents</h3>
 	<img width="70%" src="images/bool_int_agents.drawio.png" />
-	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="">
+	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|2,3|">
 		type agent =
 			| Int of int
 			| IsEven of agent
@@ -397,15 +426,15 @@
 <section>
 	<h3>Problems</h3>
 	<ul>
-		<li>Symmetry $\Rightarrow$ verbosity</li>
-		<li>Catch-all case (_, _)</li>
-		<li>Types are not enforced</li>
+		<li class="fragment fade-up">Symmetry $\Rightarrow$ verbosity</li>
+		<li class="fragment fade-up">Catch-all case (_, _)</li>
+		<li class="fragment fade-up">Types are not enforced</li>
 		<ul style="list-style: none;">
-			<li>$\Rightarrow$ $T \rightarrow\leftarrow \text{IsEven} (r)$ is accepted</li>
+			<li class="fragment fade-up">$\Rightarrow$ $T \rightarrow\leftarrow \text{IsEven} (r)$ is accepted</li>
 		</ul>
-		<li>Polarity is not enforced</li>
+		<li class="fragment fade-up">Polarity is not enforced</li>
 		<ul style="list-style: none;">
-			<li>$\Rightarrow$ $T \rightarrow\leftarrow T$ is accepted</li>
+			<li class="fragment fade-up">$\Rightarrow$ $T \rightarrow\leftarrow T$ is accepted</li>
 		</ul>
 	</ul>
 </section>
@@ -452,10 +481,11 @@
 	</code></pre>
 	<ul>
 		<li>Uses Generalised Algebraic Data Types (GADTs)</li>
-		<li>Each constructor case case restrict the type variable independently</li>
+		<li>Each constructor case can restrict the type variable independently</li>
 	</ul>
 </section>
 
+<!--
 <section>
 	<h3>Polymorphic recursion</h3>
 	<p>So far:</p>
@@ -475,6 +505,7 @@
 			fun a1 a2 -> ...
 	</code></pre>
 </section>
+-->
 
 <section data-auto-animate>
 	<h3>Polarity</h3>
@@ -493,10 +524,25 @@
 <section data-auto-animate>
 	<h3>Polarity</h3>
 	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="">
+		type (_, _) agent =
+			| Int : int -> (int, pos) agent
+			| IsEven : (bool, neg) agent -> (int, neg) agent
+			| T : (bool, pos) agent
+			| F : (bool, pos) agent
+			| And : (bool, neg) agent * (bool, pos) agent
+				-> (bool, neg) agent
+			| NamePos : ('a, pos) agent promise -> ('a, pos) agent
+			| NameNeg : ('a, pos) agent resolver -> ('a, neg) agent
+	</code></pre>
+</section>
+
+<section data-auto-animate>
+	<h3>Polarity</h3>
+	<pre class="OCaml"><code data-trim data-noescape data-line-numbers="">
 		type pos = |
 		type neg = |
 	</code></pre>
-	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="">
+	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-ln-start-from="3" data-line-numbers="">
 		type (_, _) agent =
 			| Int : int -> (int, pos) agent
 			| IsEven : (bool, neg) agent -> (int, neg) agent
@@ -511,7 +557,7 @@
 
 <section>
 	<h3>Final rule encoding</h3>
-	<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="">
+	<pre class="OCaml"><code data-trim data-noescape data-line-numbers="|2|">
 		let rec apply_rule :
 			type a. (a, pos) agent -> (a, neg) agent -> unit =
 			fun a1 a2 -> match a1, a2 with
@@ -566,23 +612,24 @@
 <section>
 	<h3>Conclusion</h3>
 	<ul>
-		<li>First embedding of interaction nets into OCaml</li>
-		<li>First embedding of Lafont's type system</li>
-		<li>For some algorithms $\Rightarrow$ speedup through parallelism</li>
+		<li class="fragment fade-up">First embedding of interaction nets into OCaml</li>
+		<li class="fragment fade-up">First embedding of Lafont's type system</li>
+		<li class="fragment fade-up">Type system enforced statically</li>
+		<li class="fragment fade-up">For some algorithms $\Rightarrow$ speedup through parallelism</li>
 	</ul>
 </section>
 
 <section>
 	<h3>Future work</h3>
 	<ul>
-		<li>Need more benchmarks</li>
+		<li class="fragment fade-up">Need more benchmarks</li>
 		<ul>
-			<li>Garbage collection</li>
-			<li>Cache behaviour</li>
-			<li>Try different parallelism-library</li>
+			<li class="fragment fade-up">Garbage collection</li>
+			<li class="fragment fade-up">Cache behaviour</li>
+			<li class="fragment fade-up">Try different parallelism-library</li>
 		</ul>
-		<li>Compiler</li>
-		<li>Formal verification of interaction nets?</li>
+		<li class="fragment fade-up">Compiler</li>
+		<li class="fragment fade-up">Formal verification of interaction nets?</li>
 	</ul>
 </section>
 
@@ -591,6 +638,8 @@
 	<br>
 	<div style="font-size: smaller">This work has been partially supported by<br> the ERC CUSTOMER project</div>
 </section>
+
+
 
 <!-- END SLIDES -->
 </div>
