@@ -81,6 +81,7 @@
 	</div>
 </section>
 
+<!--
 <section>
 	<h3>Properties of Interaction nets</h3>
 
@@ -96,12 +97,14 @@
 		<li class="fragment fade-up">Turing complete</li>
 	</ul>
 </section>
+-->
 
 <section>
 	<h3>Agents</h3>
-	<img width="60%" src="images/agent_examples.drawio.png" />
+	<img width="60%" src="images/typed_agent_example.drawio.png" />
 	<p class="fragment">$\alpha, \beta, \gamma \in \Sigma$ &nbsp; (label set)</p>
-	<p class="fragment">$ar : \Sigma \rightarrow \mathbb{N}$ &nbsp; (arity function)</p>
+	<p class="fragment">value type (int, bool, list, ...)</p>
+	<p class="fragment">polarity ($+$, $-$)</p>
 </section>
 
 <section>
@@ -120,7 +123,7 @@
 	</ul>
 	<p class="fragment">$\Rightarrow$ rewriting is <emph>strongly confluent</emph></p>
 </section>
--->
+
 
 <section data-auto-animate>
 	<h3>Typed agents</h3>
@@ -130,7 +133,7 @@
 		<li class="fragment">polarity ($+$, $-$)</li>
 	</ul>
 </section>
-<!-- 
+
 <section>
 	<h3>OCaml</h3>
 
@@ -310,7 +313,7 @@
 			<img width="90%" src="images/rule_true_and.drawio.png" />
 		</div>
 		<div class="col">
-			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="|6|8-10|">
+			<pre class="OCaml" data-id="encoding-code"><code data-trim data-noescape data-line-numbers="3,4|6|8-10|">
 				let rec apply_rule a1 a2 =
 					match a1, a2 with
 					| T, And (r, b)
@@ -595,24 +598,15 @@
 </section>
 
 <section>
-	<h3>CPU migrations</h3>
-	<img width="80%" src="images/cpu_migrations.png" />
-</section>
-
-<section>
 	<h3>Fibonacci example</h3>
 	<img width="80%" src="images/fib_ex.png" />
 </section>
 
-<section>
-	<h3>Tool comparison (Fibonacci)</h3>
-	<img width="70%" src="images/tool_comparison.png" />
-</section>
 
 <section>
 	<h3>Conclusion</h3>
 	<ul>
-		<li class="fragment fade-up">First embedding of interaction nets into OCaml</li>
+		<li class="fragment fade-up">First encoding of interaction nets in OCaml</li>
 		<li class="fragment fade-up">First embedding of Lafont's type system</li>
 		<li class="fragment fade-up">Type system enforced statically</li>
 		<li class="fragment fade-up">For some algorithms $\Rightarrow$ speedup through parallelism</li>
@@ -629,7 +623,6 @@
 			<li class="fragment fade-up">Try different parallelism-library</li>
 		</ul>
 		<li class="fragment fade-up">Compiler</li>
-		<li class="fragment fade-up">Formal verification of interaction nets?</li>
 	</ul>
 </section>
 
@@ -639,6 +632,15 @@
 	<div style="font-size: smaller">This work has been partially supported by<br> the ERC CUSTOMER project</div>
 </section>
 
+<section>
+	<h3>Tool comparison (Fibonacci)</h3>
+	<img width="70%" src="images/tool_comparison.png" />
+</section>
+
+<section>
+	<h3>CPU migrations</h3>
+	<img width="80%" src="images/cpu_migrations.png" />
+</section>
 
 
 <!-- END SLIDES -->
